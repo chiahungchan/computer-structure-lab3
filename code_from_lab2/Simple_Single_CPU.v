@@ -124,7 +124,16 @@ MUX_2to1 #(.size(32)) Mux_PC_Source(
         .data1_i(branch_next),
         .select_i(A_select),
         .data_o(PCsrc)
-        );	
+        );
+
+Data_Memory DataMem(
+		.clk_i(),
+		.addr_i(),
+		.data_i(),
+		.MemRead_i(),
+		.MemWrite_i(),
+		.data_o()
+		);	
 
 //and AND(Branch,zero,A_select);
 assign A_select = Branch & zero;
