@@ -1,6 +1,6 @@
 //Subject:     CO project 2 - Simple Single CPU
 //--------------------------------------------------------------------------------
-//Version:     1
+//Version:     2
 //--------------------------------------------------------------------------------
 //Writer:      0316331_0316031
 //----------------------------------------------
@@ -32,6 +32,10 @@ wire [4:0]  WriteReg;
 wire [31:0] MUX_o_ALU;
 wire [31:0] PCsrc;
 wire [31:0] branch_next;
+wire [31:0] memData;
+wire [31:0] jumpAddr;
+wire [31:0] WBdata;
+wire [31:0] toNextMUX;
 wire [2:0]  ALUop;
 
 //Greate componentes
@@ -66,7 +70,7 @@ Reg_File RF(
         .RSaddr_i(instr[25:21]) ,  
         .RTaddr_i(instr[20:16]) ,  
         .RDaddr_i(WriteReg) ,  
-        .RDdata_i(ALUresult)  , 
+        .RDdata_i(WBdata)  , 
         .RegWrite_i (RegWrite),
         .RSdata_o(ReadData1) ,  
         .RTdata_o(ReadData2)   
@@ -117,23 +121,44 @@ Adder Adder2(  // branch
 Shift_Left_Two_32 Shifter(
         .data_i(sign_ext),
         .data_o(after_shift)
-        ); 		
+        );	
 		
 MUX_2to1 #(.size(32)) Mux_PC_Source(
         .data0_i(PC_plus4),
         .data1_i(branch_next),
         .select_i(A_select),
-        .data_o(PCsrc)
+        .data_o(toNextMUX)
         );
 
 Data_Memory DataMem(
-		.clk_i(),
-		.addr_i(),
-		.data_i(),
+		.clk_i(clk_i),
+		.addr_i(ALUresult),
+		.data_i(ReadData2),
 		.MemRead_i(),
 		.MemWrite_i(),
-		.data_o()
-		);	
+		.data_o(memData)
+		);
+
+jumpAdd JumpADD(
+		.instr_i(instr[25:0]),
+		.pc_plus4_i(PC_plus4[31:28]),
+		.jump_address_o(jumpAddr)
+		);
+
+MUX_4to2 MUX_MtoR(
+		.data_00(ALUresult),
+		.data_01(memData),
+		.data_10(sign_ext),
+		.select(),
+		.data_o(WBdata)
+);
+
+MUX_2to1 selectJMP(
+		.data0_i(jumpAddr),
+        .data1_i(toNextMUX),
+        .select_i(),
+        .data_o(PCsrc)
+);		
 
 //and AND(Branch,zero,A_select);
 assign A_select = Branch & zero;
