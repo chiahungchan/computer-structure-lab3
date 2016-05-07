@@ -60,28 +60,83 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b0;
 			ALU_op_o <= 3'd2;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
-		1:begin  // bltz
+		1:begin  // bltz  branch type: 11
+			RegWrite_o <= 1'b0;
+			RegDst_o <= 1'b0;
+			Branch_o <= 1'b1;
+			ALUSrc_o <= 1'b0;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b11;
+			MemtoReg_o <=
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		2:begin  // jump
+			RegWrite_o <= 1'b0;
+			RegDst_o <= 1'b0;
+			Branch_o <= 1'b0;
+			ALUSrc_o <= 1'b0;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b0;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		3:begin  // jal
+			RegWrite_o <= ;
+			RegDst_o <= ;
+			Branch_o <= 1'b0;
+			ALUSrc_o <= ;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <=
+			Jump_o <= 1'b0;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
-		4:begin  // beq
+		4:begin  // beq  branch type: 00
 			RegWrite_o <= 1'b0;
 			RegDst_o <= 1'b1;  // don't care
 			Branch_o <= 1'b1;
 			ALUSrc_o <= 1'b0;
 			ALU_op_o <= 3'd1;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
-		5:begin  // bne
+		5:begin  // bne  branch type: 10
 			RegWrite_o <= 1'b0;
 			RegDst_o <= 1'b0;  // don't care
 			Branch_o <= 1'b1;
 			ALUSrc_o <= 1'b0;
 			ALU_op_o <= 3'd3;
+			BranchType_o <= 2'b10;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
-		6:begin  // ble
+		6:begin  // ble  branch type: 01
+			RegWrite_o <= 1'b0;
+			RegDst_o <= 1'b0;
+			Branch_o <= 1'b1;
+			ALUSrc_o <= 1'b0;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b01;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		8:begin  // addi
 			RegWrite_o <= 1'b1;
@@ -89,6 +144,11 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b1;
 			ALU_op_o <= 3'd4;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		9:begin  // sltiu
 			RegWrite_o <= 1'b1;
@@ -96,6 +156,11 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b1;
 			ALU_op_o <= 3'd5;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		13:begin  // ori
 			RegWrite_o <= 1'b1;
@@ -103,6 +168,11 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b1;
 			ALU_op_o <= 3'd6;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		//15:begin  // lui
 			RegWrite_o <= 1'b1;
@@ -110,10 +180,35 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b1;
 			ALU_op_o <= 3'd7;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 		35:begin  // lw
+			RegWrite_o <= 1'b1;
+			RegDst_o <= 1'b0;
+			Branch_o <= 1'b0;
+			ALUSrc_o <= 1'b1;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b01;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b1;
+			MemWrite_o <= 1'b0;
 		end
 		43:begin  // sw
+			RegWrite_o <= 1'b0;
+			RegDst_o <= 1'b0;
+			Branch_o <= 1'b0;
+			ALUSrc_o <= 1'b1;
+			ALU_op_o <= ;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b1;
 		end
 		default:begin
 			RegWrite_o <= 1'b0;
@@ -121,6 +216,11 @@ always@(*)begin
 			Branch_o <= 1'b0;
 			ALUSrc_o <= 1'b0;
 			ALU_op_o <= 3'b0;
+			BranchType_o <= 2'b00;
+			MemtoReg_o <= 2'b00;
+			Jump_o <= 1'b1;
+			MemRead_o <= 1'b0;
+			MemWrite_o <= 1'b0;
 		end
 	endcase
 end

@@ -38,7 +38,7 @@ wire [31:0] WBdata;
 wire [31:0] toNextMUX;
 wire [2:0]  ALUop;
 wire [1:0]  branchType,memtoReg;
-wire        Jump,memRead,memWrite;
+wire        Jump,memRead,memWrite,branchDecide;
 
 //Greate componentes
 ProgramCounter PC(
@@ -167,8 +167,15 @@ MUX_2to1 selectJMP(
         .data_o(PCsrc)
 );		
 
+Branch_decider Branch_deci(
+		.BranchType_i(branchType),
+		.zero_i(zero),
+		.result31_i(ALUresult[31]),
+		.branch_o(branchDecide)
+);
+
 //and AND(Branch,zero,A_select);
-assign A_select = Branch & zero;
+assign A_select = Branch & branchDecide;
 
 endmodule
 		  
