@@ -37,6 +37,8 @@ wire [31:0] jumpAddr;
 wire [31:0] WBdata;
 wire [31:0] toNextMUX;
 wire [2:0]  ALUop;
+wire [1:0]  branchType,memtoReg;
+wire        Jump,memRead,memWrite;
 
 //Greate componentes
 ProgramCounter PC(
@@ -82,7 +84,12 @@ Decoder Decoder(
 	    .ALU_op_o(ALUop),   
 	    .ALUSrc_o(ALUsrc),   
 	    .RegDst_o(RegDest),   
-		.Branch_o(Branch)   
+		.Branch_o(Branch),
+		.BranchType_o(branchType),
+		.Jump_o(Jump),
+		.MemRead_o(memRead),
+		.MemWrite_o(memWrite),
+		.MemtoReg_o(memtoReg),
 	    );
 
 ALU_Ctrl AC(
@@ -134,8 +141,8 @@ Data_Memory DataMem(
 		.clk_i(clk_i),
 		.addr_i(ALUresult),
 		.data_i(ReadData2),
-		.MemRead_i(),
-		.MemWrite_i(),
+		.MemRead_i(memRead),
+		.MemWrite_i(memWrite),
 		.data_o(memData)
 		);
 
@@ -149,14 +156,14 @@ MUX_4to2 MUX_MtoR(
 		.data_00(ALUresult),
 		.data_01(memData),
 		.data_10(sign_ext),
-		.select(),
+		.select(memtoReg),
 		.data_o(WBdata)
 );
 
 MUX_2to1 selectJMP(
 		.data0_i(jumpAddr),
         .data1_i(toNextMUX),
-        .select_i(),
+        .select_i(Jump),
         .data_o(PCsrc)
 );		
 
